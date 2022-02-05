@@ -19,5 +19,5 @@ git clone https://github.com/vient/wasm2ida
 * Merge memory sections in compile time to one array in `.wasm_data` section
 * Interpet memory offsets as raw pointers, `.wasm_data` is mapped to 0
 * Do something with `w2c_g0` register, all local variables need to be allocated on x86 stack
-* It would be nice if IDA somehow detected automatically that `wasm_rt_trap` is noreturn
+* It would be nice if IDA somehow detected automatically that `wasm_rt_trap` itself is noreturn and not rely on `__builtin_trap`
 * Use C++ mangling instead of WebAssembly one so IDA will set correct function types automatically
