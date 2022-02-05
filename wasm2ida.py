@@ -46,7 +46,6 @@ class Wasm2Ida(cli.Application):
         with pb.local.tempdir() as tmp:
             data_c: pb.LocalPath = tmp / 'data.c'
             imports_c: pb.LocalPath = tmp / 'data.imports.c'
-            # rt_c: pb.LocalPath = 
             data_o: pb.LocalPath = tmp / 'data.o'
             imports_o: pb.LocalPath = tmp / 'imports.so'
 
@@ -59,7 +58,6 @@ class Wasm2Ida(cli.Application):
             (WABT_DIR / 'wasm2c' / 'wasm-rt-impl.h').copy(tmp)
 
             (gcc['-m32', '-shared', imports_c, tmp / 'wasm-rt-impl.c', '-o', imports_o] > output)()
-            imports_o.copy(result_path + '.imports.so')
             (gcc['-m32', '-O2', '-fno-stack-protector', '-c', data_c, '-o', data_o] > output)()
             (ld['--no-dynamic-linker', '-T', (SELF_DIR / 'build' / 'script.ld'), data_o, '-L' + tmp,
                 '-l:' + imports_o.name, '-o', result_path] > output)()
