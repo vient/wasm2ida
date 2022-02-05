@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+
 import plumbum as pb
 from plumbum import cli
 
@@ -10,8 +11,8 @@ SELF_DIR = pb.local.path(__file__).dirname
 
 def get_wasm2c_cmd(quiet: bool = False):
     output = sys.stdout if not quiet else DEV_NULL
-    wabt_dir: pb.Path = SELF_DIR / 'wabt'
-    build_dir: pb.Path = wabt_dir / 'build'
+    wabt_dir: pb.LocalPath = SELF_DIR / 'wabt'
+    build_dir: pb.LocalPath = wabt_dir / 'build'
 
     if not (wabt_dir / 'Makefile').exists():
         if not quiet:
@@ -33,8 +34,7 @@ def get_wasm2c_cmd(quiet: bool = False):
 class Wasm2Ida(cli.Application):
     quiet = cli.Flag(['q', 'quiet'], help='supress all output')
 
-    def main(self, wasm_path: cli.ExistingFile, result_path: str):
-        result_path = pb.local.path(result_path)
+    def main(self, wasm_path: cli.ExistingFile, result_path: pb.LocalPath):
         if result_path.is_dir():
             raise ValueError(f'result path {result_path} is existing directory')
         result_dir = result_path.dirname
