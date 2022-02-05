@@ -4,7 +4,7 @@ from plumbum import cli
 
 
 class Wasm2Ida(cli.Application):
-    verbose = cli.Flag(['v', 'verbose'], help='If given, I will be very talkative')
+    verbose = cli.Flag(['v', 'verbose'], help='verbose output')
 
     def main(self, wasm_path: cli.ExistingFile, result_path: str):
         result_path = pb.local.path(result_path)
