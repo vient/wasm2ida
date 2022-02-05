@@ -1,0 +1,4 @@
+[submodule "wabt"]
+	path = wabt
+	url = https://github.com/vient/wabt
+	branch = wasm2ida
