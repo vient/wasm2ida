@@ -10,8 +10,7 @@ ENTRY(_start)
 SEARCH_DIR("=/usr/local/lib/i386-linux-gnu"); SEARCH_DIR("=/lib/i386-linux-gnu"); SEARCH_DIR("=/usr/lib/i386-linux-gnu"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu32"); SEARCH_DIR("=/usr/local/lib32"); SEARCH_DIR("=/lib32"); SEARCH_DIR("=/usr/lib32"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib"); SEARCH_DIR("=/usr/i386-linux-gnu/lib32"); SEARCH_DIR("=/usr/x86_64-linux-gnu/lib32"); SEARCH_DIR("=/usr/i386-linux-gnu/lib");
 SECTIONS
 {
-  . = 0x0;
-  .wasm_data  : { *(.wasm_data) }
+  .wasm_data 0x0 : { *(.wasm_data) }
   /* Read-only sections, merged into text segment: */
   PROVIDE (__executable_start = SEGMENT_START("text-segment", 0x08048000)); . = SEGMENT_START("text-segment", 0x08048000) + SIZEOF_HEADERS;
   .interp         : { *(.interp) }
