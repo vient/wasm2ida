@@ -85,11 +85,14 @@ class Wasm2Ida(cli.Application):
             if self.keep_wasm_checks:
                 defines.append('-DWASM2IDA_KEEP_CHECKS')
 
-            (gcc['-m32', '-shared', imports_c, build_dir / 'wasm-rt-impl.c', '-o', imports_o] > output)()
-            (gcc.__getitem__([*defines, '-m32', '-O2', '-fno-stack-protector', '-fno-plt', '-fno-pic', '-c', data_c,
-                imports_o, '-o', data_o]) > output)()
-            (ld['--no-dynamic-linker', '-T', (SELF_DIR / 'build' / 'script.ld'), data_o, '-L' + build_dir,
-                '-l:' + imports_o.name, '-o', result_path] > output)()
+
+            _, _, stderr = (gcc['-v', '-m32', '-shared', imports_c, build_dir / 'wasm-rt-impl.c', '-o', imports_o] > output).run()
+            library_path = next(s for s in stderr.splitlines() if s.startswith('LIBRARY_PATH=')).split('=')[1].split(':')
+            (gcc.__getitem__([*defines, '-m32', '-O2', '-fno-stack-protector', '-fno-plt', '-fno-pic', '-c', data_c, imports_o, '-o', data_o]) > output)()
+            library_path.append(build_dir)
+            library_path = [f'-L{s}' for s in library_path]
+            (ld['--no-dynamic-linker', '-m', 'elf_i386', '-T', (SELF_DIR / 'build' / 'script.ld'), data_o,
+                library_path, '-l:' + imports_o.name, '-lgcc', '-lgcc_s', '-lc', '-o', result_path] > output)()
 
 
 if __name__ == '__main__':
